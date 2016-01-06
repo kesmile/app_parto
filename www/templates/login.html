@@ -1,0 +1,18 @@
+
+<ion-view view-title="My Page">
+    <ion-content padding="true">
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input ng-model="form.token" type="text" placeholder="Token">
+        </label>
+      </div>
+      <button ng-click="ingresar(form)" class="button button-block button-positive">
+        <span ng-show="!loading">
+          Ingresar
+        </span>
+        <span ng-show="loading">
+          loading..
+        </span>
+      </button>
+    </ion-content>
+</ion-view>
