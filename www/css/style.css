@@ -1,1 +1,8 @@
 /* Empty. Add your own CSS if you like */
+.nav-custom{
+  background: #f06965;
+  color: #fff;
+}
+.card, .list-inset {
+    margin: 4px 10px;
+}

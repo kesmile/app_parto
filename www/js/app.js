@@ -11,6 +11,11 @@ angular.module('starter', ['ionic','ngCordova'])
     templateUrl: 'templates/home.html',
     controller: 'HomeCtrl'
   })
+  .state('sub', {
+    url: '/sub',
+    templateUrl: 'templates/sub.html',
+    controller: 'SubCtrl'
+  })
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
@@ -18,7 +23,7 @@ angular.module('starter', ['ionic','ngCordova'])
   });
   $urlRouterProvider.otherwise("/login");
 })
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform,$cordovaSQLite,$rootScope,$timeout,$state) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -33,5 +38,10 @@ angular.module('starter', ['ionic','ngCordova'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+    // $rootScope.db = $cordovaSQLite.openDB({ name: "parto.db" });
+    // $cordovaSQLite.execute($rootScope.db, "CREATE TABLE IF NOT EXISTS login (id integer primary key, status INTEGER DEFAULT 0)");
+    // $timeout(function() {
+    //     $state.go('login');
+    // }, 5000);
   });
 })
