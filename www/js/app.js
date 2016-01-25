@@ -38,10 +38,5 @@ angular.module('starter', ['ionic','ngCordova'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-    // $rootScope.db = $cordovaSQLite.openDB({ name: "parto.db" });
-    // $cordovaSQLite.execute($rootScope.db, "CREATE TABLE IF NOT EXISTS login (id integer primary key, status INTEGER DEFAULT 0)");
-    // $timeout(function() {
-    //     $state.go('login');
-    // }, 5000);
   });
 })

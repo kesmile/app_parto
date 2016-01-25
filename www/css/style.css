@@ -6,3 +6,6 @@
 .card, .list-inset {
     margin: 4px 10px;
 }
+.popup-buttons .button-positive {
+    background-color: #4cd964;
+}

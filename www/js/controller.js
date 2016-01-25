@@ -1,32 +1,34 @@
 angular.module('starter')
 .controller('LoginCtrl',function($scope, $http, $location,$ionicPopup,
-            TokenServices,$cordovaSQLite,$cordovaToast,$rootScope){
+            TokenServices,$cordovaSQLite,$cordovaToast,$rootScope,$timeout,$ionicHistory){
+  if(TokenServices.isActive()){
+    $location.path( "/" );
+  }
   $scope.loading = false;
   $scope.form = {
     token: ''
   };
+  var db = {};
   $scope.url_p = 'http://fotoscomadronas.herokuapp.com/'; //http://fotoscomadronas.herokuapp.com/
   //base de datos
   $scope.status = false;
+   $timeout(function () {
+    db = $cordovaSQLite.openDB( 'parto.db', 1 );
+      $cordovaSQLite.execute(db, "CREATE TABLE IF NOT  EXISTS login (id integer primary key,token TEXT, status INTEGER DEFAULT 0)");
+      $cordovaSQLite.execute(db,"SELECT * FROM login WHERE id = ?", [1]).then(function(res) {
+        if(res.rows.length > 0){
+          TokenServices.setToken(res.rows.item(0).token);
+          $ionicHistory.nextViewOptions({
+              disableBack: true
+            });
+          $location.path( "/" );
+        }
+      }, function (err) {
+          //$location.path( "/login" );
+        });
+   }, 500);
+
   //$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS login (id integer primary key, status INTEGER DEFAULT 0)");
-      // $cordovaSQLite.execute($rootScope.db, "SELECT status FROM login").then(function(res) {
-      //     if(res.rows.length > 0) {
-      //       $scope.status = true;
-      //     } else {
-      //       $scope.status = false;
-      //     }
-      // }, function (err) {
-      //   $cordovaToast
-      //     .show(err, 'long', 'center')
-      //     .then(function(success) {
-      //       // success
-      //     }, function (error) {
-      //       // error
-      //     });
-      // });
-  if($scope.status){
-    $location.path( "/" );
-  }
   $scope.ingresar = function(form){
     $scope.loading = true;
     $http({
@@ -36,21 +38,23 @@ angular.module('starter')
          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
        }).success(function(data, status, headers, config) {
          if(data.status == 'ok'){
-          //  var query = "INSERT INTO login (status) VALUES (?)";
-          //   $cordovaSQLite.execute(db, query, [true]).then(function(res) {
-          //     TokenServices.setToken(form.token);
-          //     $location.path( "/" );
-          //   }, function (err) {
-          //     // $cordovaToast
-          //     //   .show('¡Mensaje enviado exitosamente!', 'long', 'center')
-          //     //   .then(function(success) {
-          //     //     // success
-          //     //   }, function (error) {
-          //     //     // error
-          //     //   });
-          //   });
-          TokenServices.setToken(form.token);
-          $location.path( "/" );
+           $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS login (id integer primary key,token TEXT, status INTEGER DEFAULT 0)");
+           var query = "INSERT OR REPLACE INTO login (id,token,status) VALUES (?,?,?)";
+             $cordovaSQLite.execute(db, query, [1,form.token,1]).then(function(res) {
+               TokenServices.setToken(form.token);
+               $ionicHistory.nextViewOptions({
+                   disableBack: true
+                 });
+               $location.path( "/" );
+             }, function (err) {
+               $cordovaToast
+                 .show('Error en guardar', 'long', 'center')
+                 .then(function(success) {
+                   // success
+                 }, function (error) {
+                   // error
+                 });
+             });
          }else{
            var alertPopup = $ionicPopup.alert({
               title: 'Error',

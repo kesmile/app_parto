@@ -7,6 +7,7 @@ angular.module('starter').service('TokenServices',['$document',
     }
     this.setToken = function(token){
       _token = token;
+      _isActive = true;
     }
     this.getToken = function(){
       return _token;
